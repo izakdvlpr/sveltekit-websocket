@@ -1,1 +1,1 @@
-export * from './common'
+export { default as UserCard } from './user-card.svelte'

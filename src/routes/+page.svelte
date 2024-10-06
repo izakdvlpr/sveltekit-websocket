@@ -1,31 +1,21 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
-  import type { Actions, PageData } from './$types';
+  import axios, { isAxiosError } from 'axios'
+  import { goto } from '$app/navigation';
   
-  import { LogoutButton } from '$lib/components';
-  
-  export let data: PageData
-  export let form: Actions
+  async function handleLogout() {
+    try {
+      await axios.post('/api/sessions/logout')
+      
+      goto('/login')
+    } catch (error) {
+      if (isAxiosError(error)) {
+        return alert(error.response?.data.error)
+      }
+      
+      alert('An error occurred')
+    }
+  }
 </script>
 
-<form method="POST" action="?/createRoom" use:enhance>
-  {#if form?.error}
-    <p style="color: red">{form.error}</p>
-  {/if}
-  
-  <input name="name" type="text" placeholder="Room name" required>
-  
-  <button type="submit">Create room</button>
-</form>
-
-{#if data.rooms.length > 0}
-  <ul>
-    {#each data.rooms as room (room.id)}
-      <li>
-        <a href="/rooms/{room.id}">{room.name}</a>
-      </li>
-    {/each}
-  </ul>
-{/if}
-
-<LogoutButton />
+<button on:click={() => goto('/rooms')}>Go to rooms</button>
+<button on:click={handleLogout}>Logout</button>

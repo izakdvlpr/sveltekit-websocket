@@ -5,12 +5,14 @@ import type { Server } from 'socket.io';
 
 declare global {
 	var io: Server
+  var clients: Map<string, string>
 	
 	namespace App {
 		// interface Error {}
 		
 		interface Locals {
 			io: Server
+      clients: Map<string, string>
 			userId: string | null
 		}
 		
