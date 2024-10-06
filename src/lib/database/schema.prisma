@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id       String @id @default(cuid())
+  name     String
+  email    String @unique
+  status   String @default("offline")
+  password String
+
+  messages Message[]
+
+  @@map("users")
+}
+
+model Room {
+  id   String @id @default(cuid())
+  name String
+
+  messages Message[]
+
+  @@map("rooms")
+}
+
+model Message {
+  id        String    @id @default(cuid())
+  content   String
+  userId    String?   @map("user_id")
+  roomId    String    @map("room_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  user User? @relation(fields: [userId], references: [id])
+  room Room  @relation(fields: [roomId], references: [id])
+
+  @@map("messages")
+}
