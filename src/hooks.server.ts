@@ -1,8 +1,9 @@
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
+import axios from 'axios';
 import jwt from 'jsonwebtoken'
 import { building } from '$app/environment';
-import { JWT_TOKEN } from "$env/static/private"
+import { WEB_PORT, JWT_TOKEN } from "$env/static/private"
 
 import { startWebSocketServer } from '$lib/server/websocket';
 import { database } from '$lib/database';
@@ -89,11 +90,7 @@ const authenticationMiddleware: Handle = async ({ event, resolve }) => {
     const validUser = await isValidUser(userId)
     
     if (!validUser) {
-      event.cookies.delete('access-token', {
-        path: '/',
-        httpOnly: true,
-        maxAge: 60 * 60 * 24,
-      })
+      await axios.post(`http://localhost:${WEB_PORT}/api/sessions/logout`)
       
       throw redirect(303, '/login');
     }

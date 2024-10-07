@@ -1,0 +1,22 @@
+services:
+  web:
+    container_name: sveltekit-websocket
+    image: node:lts
+    restart: always
+    tty: true
+    stdin_open: true
+    user: root
+    working_dir: /usr/src/app
+    command: |
+      bash -c "
+        npm install &&
+        npx prisma migrate dev &&
+        npm run dev
+      "
+    volumes:
+      - ./:/usr/src/app
+    env_file:
+      - .env
+    ports:
+      - '${WEB_PORT}:${WEB_PORT}'
+      - '${PUBLIC_SOCKET_PORT}:${PUBLIC_SOCKET_PORT}'

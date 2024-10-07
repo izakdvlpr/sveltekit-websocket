@@ -1,0 +1,19 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+    
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: self-hosted
+    steps:
+      - name: Change directory
+        run: cd ${{ vars.REPO_PATH }}
+        
+      - name: Down container
+        run: docker compose down
+    
+      - name: Down container
+        run: docker compose up -d

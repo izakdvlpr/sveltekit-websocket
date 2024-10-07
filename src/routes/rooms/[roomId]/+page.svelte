@@ -1,9 +1,10 @@
 <script lang="ts">
   import axios, { isAxiosError } from 'axios'
-  import { onDestroy, onMount, tick  } from 'svelte';
+  import { onDestroy, onMount, tick } from 'svelte';
   import io, { type Socket } from 'socket.io-client';
   import { page } from '$app/stores'
   import { goto } from '$app/navigation';
+  import { PUBLIC_SOCKET_PORT } from '$env/static/public'
   import type { PageData } from './$types';
   
   import type { Room, Message, User } from '$lib/database';
@@ -73,9 +74,11 @@
   }
   
   async function handleConnectToWebSocket(userId: string) {
-    // onst protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    // ws = new WebSocket(`${protocol}//${window.location.host}/websocket`);
-    socket = io('ws://localhost:3001', {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const domain = window.location.hostname;
+    const port = PUBLIC_SOCKET_PORT;
+    
+    socket = io(`${protocol}//${domain}:${port}`, {
       path: '/',
       query: {
         roomId,

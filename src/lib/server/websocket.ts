@@ -5,7 +5,7 @@ import { database } from '$lib/database';
 export function startWebSocketServer(): { io: Server; clients: Map<string, string> } {
   const clients = new Map<string, string>();
   
-  const io = new Server(Number(process.env.WEBSOCKET_SERVER_PORT), {
+  const io = new Server(Number(process.env.PUBLIC_SOCKET_PORT), {
     path: '/',
     cors: { origin: '*' }
   })
