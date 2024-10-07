@@ -9,11 +9,8 @@ jobs:
     name: Deploy
     runs-on: self-hosted
     steps:
-      - name: Change directory
-        run: cd ${{ secrets.REPO_PATH }}
-        
-      - name: Down container
-        run: docker compose down
-    
-      - name: Down container
-        run: docker compose up -d
+      - name: Run docker compose
+        run: |
+          cd ${{ secrets.REPO_PATH }}
+          docker compose down
+          docker compose up -d
