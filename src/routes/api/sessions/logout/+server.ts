@@ -8,6 +8,7 @@ export const POST: RequestHandler = async ({ cookies, locals }) => {
   cookies.delete('access-token', {
     path: '/',
     httpOnly: true,
+    secure: false,
     maxAge: 60 * 60 * 24
   })
   

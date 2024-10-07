@@ -33,6 +33,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
     cookies.set('access-token', token, {
       path: '/',
       httpOnly: true,
+      secure: false,
       maxAge: 60 * 60 * 24
     })
     

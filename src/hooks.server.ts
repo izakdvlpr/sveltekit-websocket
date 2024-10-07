@@ -84,6 +84,7 @@ const authenticationMiddleware: Handle = async ({ event, resolve }) => {
     const userId = await getUserId(accessToken)
     
     if (!userId) {
+      
 			throw redirect(303, '/login');
 		}
     
