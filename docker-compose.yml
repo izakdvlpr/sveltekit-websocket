@@ -11,7 +11,8 @@ services:
       bash -c "
         npm install &&
         npx prisma migrate dev &&
-        npm run dev
+        npm run build && 
+        npm run preview
       "
     volumes:
       - ./:/usr/src/app

@@ -84,7 +84,7 @@ export function startWebSocketServer(): { io: Server; clients: Map<string, strin
     });
   });
   
-  console.log(`[ws] Server started on port ${process.env.WEBSOCKET_SERVER_PORT}`);
+  console.log(`[ws] Server started on port ${process.env.PUBLIC_SOCKET_PORT}`);
   
   return { io, clients }
 }
