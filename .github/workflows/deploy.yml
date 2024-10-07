@@ -12,6 +12,8 @@ jobs:
       - name: Run Deploy
         run: |
           cd ${{ secrets.REPO_PATH }}
+          eval "$(ssh-agent -s)"
+          ssh-add ${{ secrets.SSH_PRIVATE_KEY_PATH }}
           git pull origin main
           docker compose down
           docker compose up -d
