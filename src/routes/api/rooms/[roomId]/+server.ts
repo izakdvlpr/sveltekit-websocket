@@ -14,7 +14,7 @@ export const GET: RequestHandler = async ({ params }) => {
   });
   
   if (!room) {
-    return json({ error: 'Room not found' }, { status: 404 });
+    return json({ error: 'Sala não encontrada' }, { status: 404 });
   }
   
   return json({ room });

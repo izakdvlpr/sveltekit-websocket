@@ -19,13 +19,13 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
     });
     
     if (!user) {
-      return json({ error: "Invalid email or password" }, { status: 400 });
+      return json({ error: "Email ou senha inválidos" }, { status: 400 });
     }
     
     const valid = await bcrypt.compare(password, user.password);
     
     if (!valid) {
-      return json({ error: "Invalid email or password" }, { status: 400 });
+      return json({ error: "Email ou senha inválidos" }, { status: 400 });
     }
     
     const token = jwt.sign({ userId: user.id }, JWT_TOKEN, { expiresIn: '1d' });
@@ -41,6 +41,6 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
   } catch (err) {
     console.error(err);
     
-    return json({ error: "Internal server error" }, { status: 500 });
+    return json({ error: "Erro interno no servidor" }, { status: 500 });
   }
 }

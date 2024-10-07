@@ -14,7 +14,7 @@ export const GET: RequestHandler = async ({ params }) => {
   });
   
   if (!user) {
-    return json({ error: 'User not found' }, { status: 404 });
+    return json({ error: 'Usuário não encontrado' }, { status: 404 });
   }
   
   return json({ user });

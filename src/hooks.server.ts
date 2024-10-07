@@ -25,7 +25,7 @@ const webSocketMiddleware: Handle = async ({ event, resolve }) => {
 }
 
 const PUBLIC_PATHS = [/^\/login$/, /^\/register$/];
-const PROTECTED_PATHS = [/^\/$/, /^\/rooms\/(?:[a-zA-Z0-9]+)?$/];
+const PROTECTED_PATHS = [/^\/rooms$/, /^\/rooms\/[a-zA-Z0-9]+?$/];
 
 function isValidToken(accessToken: string) {
 	try {

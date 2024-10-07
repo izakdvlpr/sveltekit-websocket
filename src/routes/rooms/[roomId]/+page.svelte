@@ -1,14 +1,16 @@
 <script lang="ts">
   import axios, { isAxiosError } from 'axios'
   import { onDestroy, onMount, tick } from 'svelte';
+  import { toast } from 'svelte-sonner';
   import io, { type Socket } from 'socket.io-client';
   import { page } from '$app/stores'
-  import { goto } from '$app/navigation';
   import { PUBLIC_SOCKET_PORT } from '$env/static/public'
   import type { PageData } from './$types';
+	import { ChevronLeft } from 'lucide-svelte';
   
   import type { Room, Message, User } from '$lib/database';
-  import { UserCard } from '$lib/components';
+	import { Card, Input, Button, ScrollArea, Separator, LogoutButton, RoomMessageRow, RoomUserRow } from '$lib/components';
+	import { goto } from '$app/navigation';
   
   type MessageWithUser = Message & { user: User }
   
@@ -17,7 +19,7 @@
   export let data: PageData
   
   let socket: Socket | null = null;
-  let messageList: HTMLUListElement | null = null;
+  let messageList: any = null;
   
   let room: Room | null = null;
   let messages: MessageWithUser[] = [];
@@ -65,11 +67,7 @@
       
       messageContent = '';
     } catch (err) {
-      if (isAxiosError(err)) {
-        return alert(err.response?.data.error);
-      }
-      
-      alert('An error occurred');
+      toast.error(isAxiosError(err) ? err.response?.data.error : 'Houve um erro');
     }
   }
   
@@ -87,8 +85,8 @@
     });
     
     socket.on('connect', async () => {
-      await handleGetAllMessagesFromRoom();
       await handleGetAllUsersFromRoom();
+      await handleGetAllMessagesFromRoom();
     });
     
     socket.on('message', async (message: MessageWithUser) => {
@@ -120,39 +118,65 @@
 </script>
 
 {#if room}
-  <button on:click={() => goto('/rooms')}>Back to rooms</button>
-
-  <h1>{room.name}</h1>
-  
-  <div style="max-width: 800px; display: flex;">
-    {#if messages.length > 0}
-      <ul bind:this={messageList} style="max-height: 200px; width: 100%; overflow-y: scroll">
-        {#each messages as message (message.id)}
-          <li>
-            <strong>[{message.user ? message.user.name : 'System'}]</strong> {message.content}
-          </li>
-        {/each}
-      </ul>
-    {/if}
+  <main class="relative w-full h-screen flex items-center justify-center">
+    <Button class="absolute left-5 top-5" on:click={() => goto("/")}>
+      <ChevronLeft />
+    </Button>
     
-    {#if users.length > 0}
-      <ul style="max-height: 200px; width: 100%; overflow-y: scroll">
-        {#each users as user (user.id)}
-          <UserCard {user} />
-        {/each}
-      </ul>
-    {/if}
-  </div>
-  
-  <form on:submit|preventDefault={handleSendMessageToRoom}>
-    <input
-      name="messageContent"
-      type="text"
-      placeholder="Message"
-      bind:value={messageContent}
-      required
-    >
+    <LogoutButton />
     
-    <button type="submit">Send</button>
-  </form>
+    <div class="flex space-x-6">
+      <Card.Root class="w-[700px]">
+        <Card.Header>
+          <Card.Title>{room.name}</Card.Title>
+          <Card.Description>Respeite as regras da sala!</Card.Description>
+        </Card.Header>
+        
+        <Card.Content class="space-y-6">
+          <div bind:this={messageList} class="h-[400px] flex flex-col gap-2 overflow-y-scroll">
+            {#each messages as message (message.id)}
+              <RoomMessageRow
+                {message}
+                isYourself={message.user?.id === userId}
+              />
+            {/each}
+          </div>
+        </Card.Content>
+        
+        <Card.Footer>
+          <form 
+            class="w-full flex items-center gap-4"
+            autocomplete="off"
+            on:submit|preventDefault={handleSendMessageToRoom}
+          >
+            <Input
+              name="messageContent"
+              type="text"
+              placeholder="Mensagem"
+              bind:value={messageContent}
+              required
+            />
+            
+            <Button type="submit">Enviar</Button>
+          </form>
+        </Card.Footer>
+      </Card.Root>
+      
+      <Card.Root class="w-[250px]">
+        <Card.Content class="space-y-2">
+          <h1 class="text-md font-semibold text-gray-300">Usuários</h1>
+        
+          <Separator />
+          
+          <ScrollArea class="h-[400px]">
+            <div class="flex flex-col gap-2">
+              {#each users as user (user.id)}
+                <RoomUserRow {user} />
+              {/each}
+            </div>
+          </ScrollArea>
+        </Card.Content>
+      </Card.Root>
+    </div>
+  </main>
 {/if}

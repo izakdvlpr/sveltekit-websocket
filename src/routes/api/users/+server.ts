@@ -7,7 +7,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
   const { name, email, password } = await request.json();
   
   if (!name || !email || !password) {
-    return json({ error: "Missing fields" }, { status: 422 });
+    return json({ error: "Campos obrigatórios não preenchidos" }, { status: 422 });
   }
   
   try {
@@ -25,11 +25,11 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
     return json({ userId: user.id });
   } catch (err: any) {
     if (err.code === 'P2002') {
-      return json({ error: "Email already in use" }, { status: 400 });
+      return json({ error: "Email já cadastrado" }, { status: 409 });
     }
     
     console.error(err);
     
-    return json({ error: "Internal server error" }, { status: 500 });
+    return json({ error: "Erro interno no servidor" }, { status: 500 });
   }
 }

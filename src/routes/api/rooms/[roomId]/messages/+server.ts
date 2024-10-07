@@ -21,7 +21,7 @@ export const GET: RequestHandler = async ({ params }) => {
   })
   
   if (!messages) {
-    return json({ error: 'Room not found' }, { status: 404 });
+    return json({ error: 'Sala não encontrada' }, { status: 404 });
   }
   
   return json({ messages });
@@ -34,7 +34,7 @@ export const POST: RequestHandler = async ({ params, request, locals }) => {
   const { content, userId } = await request.json();
 
   if (!roomId || !content || !userId) {
-    return json({ error: 'Missing fields' }, { status: 422 });
+    return json({ error: 'Campos obrigatórios não preenchidos' }, { status: 400 });
   }
   
   try {
@@ -59,6 +59,6 @@ export const POST: RequestHandler = async ({ params, request, locals }) => {
   } catch (err) {
     console.error(err)
     
-    return json({ error: 'Internal server error' }, { status: 500 });
+    return json({ error: 'Erro interno no servidor' }, { status: 500 });
   }
 }

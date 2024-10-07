@@ -7,7 +7,8 @@ export const GET: RequestHandler = async () => {
     select: {
       id: true,
       name: true
-    }
+    },
+    orderBy: { id: 'desc' }
   });
   
   return json({ rooms });
@@ -17,7 +18,7 @@ export const POST: RequestHandler = async ({ request }) => {
   const { name } = await request.json();
 
   if (!name) {
-    return json({ error: 'Missing fields' }, { status: 422 });
+    return json({ error: 'Campo obrigatório não preenchido' }, { status: 400 });
   }
 
   try {
@@ -30,6 +31,6 @@ export const POST: RequestHandler = async ({ request }) => {
   } catch (err) {
     console.error(err);
     
-    return json({ error: 'Internal server error' }, { status: 500 });
+    return json({ error: 'Erro interno no servidor' }, { status: 500 });
   }
 }

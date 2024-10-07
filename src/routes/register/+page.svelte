@@ -1,7 +1,10 @@
 <script lang="ts">
   import axios, { isAxiosError } from 'axios';
   import { goto } from '$app/navigation';
+	import { toast } from 'svelte-sonner';
 	
+  import { Button, Card, Input, Label } from "$lib/components";
+
 	let formData = { name: '', email: '', password: '' };
   
   async function handleRegister() {
@@ -20,47 +23,74 @@
       });
       
       goto('/');
-    } catch (err) {
-      if (isAxiosError(err)) {
-        return alert(err.response?.data.error);
-      }
       
-      alert('An error occurred');
+      toast.success('Conta criada com sucesso');
+    } catch (err) {
+      toast.error(isAxiosError(err) ? err.response?.data.error : 'Houve um erro');
     }
   }
 </script>
 
-<form autocomplete="off" on:submit|preventDefault={handleRegister}>
-  <label for="name">Name</label>
-  <input 
-    name="name"
-    type="name"
-    autocomplete="off"
-    bind:value={formData.name}
-    required
-  />
+<main class="w-full h-screen flex items-center justify-center">
+  <div class="flex flex-col items-center gap-4">
+    <div class="space-y-1">
+      <h1 class="text-2xl text-center font-semibold">Registrar</h1>
+      <p class="text-sm text-gray-400">Cadastre-se para acessar as salas.</p>
+    </div>
     
-	<label for="email">Email</label>
-  <input 
-    name="email"
-    type="email"
-    autocomplete="off"
-    bind:value={formData.email}
-    required
-  />
-  
-	<label for="password">Password</label>
-  <input
-    name="password"
-    type="password"
-    autocomplete="off"
-    bind:value={formData.password}
-    required
-  />
-  
-	<button type="submit">Sign in</button>
-</form>
-
-<hr>
-
-<a href="/login">Login</a>
+    <Card.Root class="w-[350px]">
+      <Card.Content>
+        <form 
+          class="space-y-4"
+          autocomplete="off"
+          on:submit|preventDefault={handleRegister}
+        > 
+          <div class="flex flex-col space-y-2">
+            <Label for="name">Nome</Label>
+            
+            <Input 
+              name="name"
+              type="name"
+              placeholder="Nome"
+              autocomplete="off"
+              bind:value={formData.name}
+              required
+            />
+          </div>
+          
+          <div class="flex flex-col space-y-2">
+            <Label for="email">Email</Label>
+            
+            <Input 
+              name="email"
+              type="email"
+              placeholder="Email"
+              autocomplete="off"
+              bind:value={formData.email}
+              required
+            />
+          </div>
+          
+          <div class="flex flex-col space-y-2">
+            <Label for="password">Password</Label>
+            
+            <Input
+              name="password"
+              type="password"
+              placeholder="Senha"
+              autocomplete="off"
+              bind:value={formData.password}
+              required
+            />
+          </div>
+          
+          <Button type="submit" class="w-full">Registrar-se</Button>
+        </form>
+      </Card.Content>
+    </Card.Root>
+    
+    <p class="text-center text-sm text-gray-500">
+      Já tem uma conta? <a href="/login" class="text-blue-500">Entrar</a>
+    </p>
+  </div>
+</main>
