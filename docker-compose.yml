@@ -33,7 +33,7 @@ services:
     command: |
       bash -c "
         npm install &&
-        npx prisma migrate prod &&
+        npx prisma migrate deploy &&
         npm run build && 
         npm run preview
       "
