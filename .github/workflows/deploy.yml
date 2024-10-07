@@ -9,8 +9,14 @@ jobs:
     name: Deploy
     runs-on: self-hosted
     steps:
-      - name: Run docker compose
-        run: |
-          cd ${{ secrets.REPO_PATH }}
-          docker compose down
-          docker compose up -d
+      - name: Change directory
+        run: cd ${{ secrets.REPO_PATH }}
+        
+      - name: Pull repository
+        run: git pull origin main
+        
+      - name: Down container
+        run: docker compose down
+    
+      - name: Down container
+        run: docker compose up -d
