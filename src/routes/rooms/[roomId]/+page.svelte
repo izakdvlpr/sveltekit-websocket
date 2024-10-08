@@ -72,11 +72,13 @@
   }
   
   async function handleConnectToWebSocket(userId: string) {
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const domain = window.location.hostname;
-    const port = PUBLIC_SOCKET_PORT;
+    const isSecureProtocol = location.protocol === 'https:';
     
-    socket = io(`${protocol}//${domain}:${port}`, {
+    const websocketUrl = isSecureProtocol ? 
+      'wss://chat.izak.tech/ws' : 
+      `ws://${window.location.hostname}:${PUBLIC_SOCKET_PORT}`;
+    
+    socket = io(websocketUrl, {
       path: '/',
       query: {
         roomId,
