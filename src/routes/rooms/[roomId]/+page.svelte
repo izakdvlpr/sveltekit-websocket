@@ -75,8 +75,8 @@
     const isSecureProtocol = location.protocol === 'https:';
     
     const websocketUrl = isSecureProtocol ? 
-      'wss://chat.izak.tech/ws' : 
-      `ws://${window.location.hostname}:${PUBLIC_SOCKET_PORT}`;
+      'https://ws.izak.tech' : 
+      `http://${window.location.hostname}:${PUBLIC_SOCKET_PORT}`;
     
     socket = io(websocketUrl, {
       path: '/',
